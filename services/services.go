@@ -2,11 +2,14 @@ package services
 
 import (
 	"github.com/jccatrinck/cartesian/services/points"
+	"github.com/jccatrinck/cartesian/storage"
 )
 
 // Configure all services
 func Configure() (err error) {
-	err = points.Configure()
+	s := storage.Get()
+
+	err = points.Configure(s)
 
 	if err != nil {
 		return
