@@ -1,0 +1,61 @@
+version: '3.6'
+
+services:
+
+  api:
+    build:
+      context: ../
+      dockerfile: ./devops/Dockerfile
+      args:
+        PACKAGE: $PACKAGE
+    networks:
+      - api-network
+    volumes:
+      - ../data:/data
+    environment:
+      POINTS_FILE: /data/points.json
+      API_PORT: $API_PORT
+      API_KEY: $API_KEY
+      API_STORAGE_TYPE: $API_STORAGE_TYPE
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: $MYSQL_DATABASE
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+    ports:
+      - $API_PORT:$API_PORT
+    depends_on:
+      - redis
+      - mysql
+    restart: always
+  
+  redis:
+    image: sickp/alpine-redis:4.0.6
+    networks:
+      - api-network
+    ports:
+      - $REDIS_PORT:6379
+    volumes:
+      - ./volumes/redis/data:/data
+      - ./volumes/redis/dump:/var/lib/redis
+  
+  mysql:
+    image: mysql:8.0.23
+    networks:
+      - api-network
+    environment:
+      MYSQL_DATABASE: $MYSQL_DATABASE
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+    ports:
+      - $MYSQL_PORT:3306
+    volumes:
+      - ./volumes/mysql:/var/lib/mysql
+
+networks:
+  api-network:
+    name: api-network
