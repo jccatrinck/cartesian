@@ -3,20 +3,24 @@ package points
 import (
 	"net/http"
 
-	"github.com/shopspring/decimal"
+	"github.com/jccatrinck/cartesian/services/points"
+	"github.com/jccatrinck/cartesian/services/points/model"
 
 	"github.com/labstack/echo/v4"
 )
 
+// Request for Handler
 type Request struct {
-	X        decimal.Decimal `query:"x"`
-	Y        decimal.Decimal `query:"y"`
-	Distance decimal.Decimal `query:"distance"`
-	Pretty   bool            `query:"pretty"`
+	X        int  `query:"x"`
+	Y        int  `query:"y"`
+	Distance int  `query:"distance"`
+	Pretty   bool `query:"pretty"`
 }
 
-// Handler returns all/filtered points as JSON array
+// Handler returns points by distance of a point as JSON array
 func Handler(c echo.Context) (err error) {
+	ctx := c.Request().Context()
+
 	request := Request{}
 
 	err = c.Bind(&request)
@@ -26,7 +30,23 @@ func Handler(c echo.Context) (err error) {
 		return c.JSON(http.StatusBadRequest, nil)
 	}
 
-	relativePoints := []struct{}{}
+	point := model.Point{
+		X: request.X,
+		Y: request.Y,
+	}
+
+	distance := request.Distance
+
+	relativePoints, err := points.GetPointsByDistance(ctx, point, distance)
+
+	if err != nil {
+		c.Logger().Error(err)
+		return c.JSON(http.StatusInternalServerError, nil)
+	}
+
+	if len(relativePoints) == 0 {
+		return c.JSON(http.StatusNoContent, nil)
+	}
 
 	if request.Pretty {
 		return c.JSONPretty(http.StatusOK, relativePoints, "\t")

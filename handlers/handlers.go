@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// Create all API handlers
+// Create API handlers
 func Create(g *echo.Group) {
 	g.GET("/points", points.Handler)
 }
