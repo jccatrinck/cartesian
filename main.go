@@ -5,6 +5,8 @@ import (
 
 	"github.com/jccatrinck/cartesian/handlers"
 	"github.com/jccatrinck/cartesian/libs/env"
+	"github.com/jccatrinck/cartesian/libs/redis"
+	"github.com/jccatrinck/cartesian/middlewares/auth"
 	"github.com/jccatrinck/cartesian/services"
 
 	"github.com/labstack/echo/v4"
@@ -29,7 +31,7 @@ func main() {
 	e.Use(middleware.Logger())
 
 	// Create api subroute
-	api := e.Group("/api")
+	api := e.Group("/api", auth.Middleware)
 	handlers.Create(api)
 
 	// Starts the API
@@ -41,7 +43,13 @@ func main() {
 }
 
 func configure() {
-	err := services.Configure()
+	err := redis.Configure()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = services.Configure()
 
 	if err != nil {
 		log.Fatal(err)
