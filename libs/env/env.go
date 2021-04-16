@@ -6,8 +6,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var env map[string]string
-
 // Load env from file
 func Load(filename string) (err error) {
 	return godotenv.Load(filename)
