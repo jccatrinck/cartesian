@@ -15,10 +15,12 @@ vendor: ## Generate vendor folder
 	@ go mod vendor
 
 build: chkenv vendor ## Build the API
-	@ docker-compose -f devops/docker-compose.yml --project-name cartesian build --no-cache
+	@ docker-compose -f devops/docker-compose.yml --project-name cartesian --env-file .env \
+		build --no-cache
 
 run: chkenv vendor ## Run the API
-	@ docker-compose -f devops/docker-compose.yml --project-name cartesian up --build --remove-orphans --detach
+	@ docker-compose -f devops/docker-compose.yml --project-name cartesian --env-file .env \
+		up --build --remove-orphans --detach
 
 logs: ## Watch API logs
 	@ docker-compose -f devops/docker-compose.yml --project-name cartesian logs --follow api
