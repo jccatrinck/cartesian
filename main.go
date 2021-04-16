@@ -8,6 +8,7 @@ import (
 	"github.com/jccatrinck/cartesian/libs/redis"
 	"github.com/jccatrinck/cartesian/middlewares/auth"
 	"github.com/jccatrinck/cartesian/services"
+	"github.com/jccatrinck/cartesian/storage"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -44,6 +45,12 @@ func main() {
 
 func configure() {
 	err := redis.Configure()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = storage.Configure()
 
 	if err != nil {
 		log.Fatal(err)
