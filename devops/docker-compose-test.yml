@@ -1,0 +1,67 @@
+version: '3.6'
+
+services:
+
+  api-test:
+    build:
+      context: ../
+      dockerfile: ./devops/Dockerfile.test
+      args:
+        PACKAGE: $PACKAGE
+    networks:
+      - api-network-test
+    volumes:
+      - ./volumes/test:/test
+    environment:
+      POINTS_FILE: data/points.json
+      API_PORT: $API_PORT
+      API_KEY: $API_KEY
+      API_STORAGE_TYPE: $API_STORAGE_TYPE
+      REDIS_HOST: redis-test
+      REDIS_PORT: 6379
+      MYSQL_HOST: mysql-test
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: $MYSQL_DATABASE
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+    depends_on:
+      - mysql-test
+        # condition: service_healthy
+  
+  redis-test:
+    image: sickp/alpine-redis:4.0.6
+    networks:
+      - api-network-test
+    ports:
+      - 6379
+    volumes:
+      - redis-data:/data
+      - redis-dump:/var/lib/redis
+  
+  mysql-test:
+    image: mysql:8.0.23
+    networks:
+      - api-network-test
+    environment:
+      MYSQL_DATABASE: $MYSQL_DATABASE
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+    ports:
+      - 3306
+    volumes:
+      - mysql-data:/var/lib/mysql
+    # healthcheck:
+    #   test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+    #   timeout: 5s
+    #   retries: 10
+
+volumes:
+  redis-data:
+  redis-dump:
+  mysql-data:
+
+networks:
+  api-network-test:
+    name: api-network-test

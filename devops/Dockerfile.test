@@ -1,0 +1,15 @@
+FROM golang:1.15.7-alpine3.13
+
+ARG PACKAGE=""
+ARG WORKPATH="${GOPATH}/src/${PACKAGE}"
+
+RUN apk add --no-cache git
+
+WORKDIR $WORKPATH
+  
+ARG CACHE_BUST=0
+
+COPY . .
+
+ENTRYPOINT CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+  go test --tags=mock -v -covermode=count  -coverprofile=/test/coverage.out -bench=. -benchtime=3s ./...
