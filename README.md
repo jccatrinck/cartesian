@@ -157,6 +157,24 @@ type Storage interface {
 	points.Storage
 }
 ```
+
+Memory storage benchmark
+
+- `BenchmarkPure`: simple loop through all points
+- `BenchmarkGetPointsByDistance`: find nearest X and Y using divide and conquer and filter distance of a small subset. 
+
+Total points: 100k
+
+```
+goos: linux
+goarch: amd64
+pkg: github.com/jccatrinck/cartesian/storage/memory
+BenchmarkPure
+BenchmarkPure-2                         85       37342004 ns/op        21.2 distance/op
+BenchmarkGetPointsByDistance
+BenchmarkGetPointsByDistance-2         258       12802766 ns/op        24.3 distance/op
+```
+
 ---
 ### Testing
 
