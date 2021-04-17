@@ -1,4 +1,7 @@
-# Cartesian API
+# Cartesian API 
+[![Build](https://github.com/jccatrinck/cartesian/actions/workflows/build.yml/badge.svg)](https://github.com/jccatrinck/cartesian/actions/workflows/build.yml)
+[![Test](https://github.com/jccatrinck/cartesian/actions/workflows/test.yml/badge.svg)](https://github.com/jccatrinck/cartesian/actions/workflows/test.yml)
+[![Lint](https://github.com/jccatrinck/cartesian/actions/workflows/lint.yml/badge.svg)](https://github.com/jccatrinck/cartesian/actions/workflows/lint.yml)
 
 Cartesian API for spatial data processing using geometry techniques to search points in 2d plane.
 
