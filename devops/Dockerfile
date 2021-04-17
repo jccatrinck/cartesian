@@ -56,9 +56,8 @@ ARG CACHE_BUST=0
 COPY . .
 
 # Build the API executable
-RUN build_date=$(date '+%F') \
-  CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
-  go build -ldflags "-X main.Version=$build_date" -o /root/app *.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+  go build -ldflags "-X 'main.Version=$(date '+%Y%m%d%H%M%S')'" -o /root/app *.go
 
 # Lightweight reliable docker image for running the API
 FROM alpine:3.13
