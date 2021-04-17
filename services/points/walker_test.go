@@ -34,8 +34,9 @@ func TestWalker(t *testing.T) {
 	walker, err := NewWalker(reader)
 	assert.NoError(t, err)
 
-	walker.Run(func(chunk []model.Point) error {
+	err = walker.Run(func(chunk []model.Point) error {
 		assert.NotEmpty(t, chunk)
 		return nil
 	})
+	assert.NoError(t, err)
 }

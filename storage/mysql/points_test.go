@@ -1,11 +1,7 @@
 package mysql
 
 import (
-	"bytes"
-	"encoding/json"
-	"io"
 	"math"
-	"strings"
 	"testing"
 
 	"github.com/go-sql-driver/mysql"
@@ -67,30 +63,17 @@ func generatePoint() model.Point {
 	}
 }
 
-func pointsAsReader(points []model.Point) (reader io.ReadSeeker, err error) {
-	data := ""
-	buf := bytes.NewBufferString(data)
+func setupPoints() (err error) {
+	total := 0
 
-	e := json.NewEncoder(buf)
-
-	err = e.Encode(points)
+	err = m.db.Select(&total, `
+		SELECT COUNT(*)
+		FROM point
+	`)
 
 	if err != nil {
 		return
 	}
-
-	reader = strings.NewReader(data)
-
-	return
-}
-
-func setupPoints() (err error) {
-	total := 0
-
-	m.db.Select(&total, `
-		SELECT COUNT(*)
-		FROM point
-	`)
 
 	points := generatePoints(1000000 - total)
 

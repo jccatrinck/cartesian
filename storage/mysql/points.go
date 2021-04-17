@@ -65,8 +65,6 @@ func (m *MySQL) getPointsByDistance(ctx context.Context, c chan<- []model.Relati
 	}
 
 	c <- points
-
-	return
 }
 
 // GetPointsByDistance implements points.Storage interface

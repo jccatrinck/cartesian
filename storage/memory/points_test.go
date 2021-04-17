@@ -98,6 +98,7 @@ func BenchmarkRaw(b *testing.B) {
 				})
 			}
 		}
+		_ = points
 	}
 }
 

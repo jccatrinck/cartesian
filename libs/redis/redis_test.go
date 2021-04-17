@@ -21,7 +21,7 @@ func TestLoad(t *testing.T) {
 	stringCMD := Client.Get(ctx, "TEST")
 
 	value, err := stringCMD.Result()
-	assert.NoError(t, status.Err())
+	assert.NoError(t, err)
 
 	assert.Equal(t, "TEST", value)
 }

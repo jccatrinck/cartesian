@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/jccatrinck/cartesian/handlers"
 	"github.com/jccatrinck/cartesian/libs/env"
@@ -30,6 +31,10 @@ func main() {
 	e.Use(middleware.RequestID())
 	e.Use(middleware.Recover())
 	e.Use(middleware.Logger())
+
+	e.GET("/", func(c echo.Context) (err error) {
+		return c.JSON(http.StatusOK, Version)
+	})
 
 	// Create api subroute
 	api := e.Group("/api", auth.Middleware)

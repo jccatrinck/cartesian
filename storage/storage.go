@@ -34,15 +34,12 @@ func Configure() (err error) {
 	switch Type(strings.ToLower(storageType)) {
 	case Memory:
 		instance = memory.New()
-		break
 	case MySQL:
 		instance, err = mysql.New()
 
 		if err != nil {
 			return
 		}
-
-		break
 	default:
 		err = errors.New("Invalid API_STORAGE_TYPE env variable value")
 		return

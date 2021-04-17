@@ -23,10 +23,7 @@ func (m *memoryPoints) LoadPoints(reader io.ReadSeeker) (err error) {
 	}
 
 	err = pw.Run(func(chunk []model.Point) (err error) {
-		for _, point := range chunk {
-			m.points = append(m.points, point)
-		}
-
+		m.points = append(m.points, chunk...)
 		return
 	})
 
