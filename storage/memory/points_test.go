@@ -57,7 +57,9 @@ func generatePoints(amount int) (points []model.Point) {
 func prepareBenchmark() (m Memory, err error) {
 	m = Memory{}
 
-	points := generatePoints(1000)
+	points := generatePoints(100000)
+
+	points = append(points, model.Point{X: -94, Y: 89})
 
 	jsonBytes, err := json.Marshal(&points)
 
@@ -74,7 +76,7 @@ func prepareBenchmark() (m Memory, err error) {
 	return
 }
 
-func BenchmarkRaw(b *testing.B) {
+func BenchmarkPure(b *testing.B) {
 	m, err := prepareBenchmark()
 
 	if err != nil {
@@ -82,10 +84,14 @@ func BenchmarkRaw(b *testing.B) {
 		return
 	}
 
+	amountDistance := 0
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		pointA := model.Point{X: -94, Y: 89}
-		distance := randomRange(1, 1000)
+		distance := randomRange(0, 50)
+
+		amountDistance = amountDistance + distance
 
 		points := []model.RelativePoint{}
 		for _, pointB := range m.points {
@@ -100,6 +106,36 @@ func BenchmarkRaw(b *testing.B) {
 		}
 		_ = points
 	}
+	b.StopTimer()
+	b.ReportMetric(float64(amountDistance)/float64(b.N), "distance/op")
+}
+
+func BenchmarkGetPointsByDistance(b *testing.B) {
+	m, err := prepareBenchmark()
+
+	if err != nil {
+		b.Error(err)
+		return
+	}
+
+	amountDistance := 0
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		pointA := model.Point{X: -94, Y: 89}
+		distance := randomRange(0, 50)
+
+		amountDistance = amountDistance + distance
+
+		points, err := m.GetPointsByDistance(pointA, distance)
+		if err != nil {
+			b.Error()
+			return
+		}
+		_ = points
+	}
+	b.StopTimer()
+	b.ReportMetric(float64(amountDistance)/float64(b.N), "distance/op")
 }
 
 func TestGetPointsByDistance(t *testing.T) {
