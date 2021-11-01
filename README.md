@@ -9,7 +9,7 @@ Cartesian API for spatial data processing using geometry techniques to search po
 ### Summary
 
 - [Quick-start](#quick-start)
-- [Structure](#storage)
+- [Structure](#structure)
 - [Techniques](#techniques)
 - [Storage](#storage)
 - [Testing](#testing)
